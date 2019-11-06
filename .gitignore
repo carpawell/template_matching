@@ -2,4 +2,6 @@
 /yalefaces
 /data
 /.idea
-/__pycache__/
+/__pycache__
+/data
+/yaleB11
