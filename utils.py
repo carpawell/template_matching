@@ -6,7 +6,7 @@ show_crosshair = False
 from_center = False
 template_name = "./template/yaleB11_P00A+005E+10.pgm"  # name of template in /template
 template_cropped_name = "./template/template_cropped.jpg"  # name of template after cropping in /template
-threshold = 0.5
+threshold = 0.7
 
 # methods = ['cv.TM_CCOEFF', 'cv.TM_CCOEFF_NORMED', 'cv.TM_CCORR',
 #            'cv.TM_CCORR_NORMED', 'cv.TM_SQDIFF', 'cv.TM_SQDIFF_NORMED']
@@ -43,7 +43,6 @@ def search():
                 exit()
 
             frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-            frame_copy = frame.copy()
             frame_width, frame_height = frame.shape[::-1]
 
             matching = []
@@ -59,7 +58,7 @@ def search():
                 # print(template_copy.shape[::-1])
                 # cv.imshow("resizing", template_copy)
                 # cv.waitKey(2000)
-                res = cv.matchTemplate(frame_copy, template_copy, cv.TM_CCOEFF_NORMED)
+                res = cv.matchTemplate(frame, template_copy, cv.TM_CCOEFF_NORMED)
 
                 min_val, max_val, min_loc, max_loc = cv.minMaxLoc(res)
 
@@ -70,16 +69,16 @@ def search():
             # print("Max score is ", max_val)
 
             for match in matching:
-                cv.rectangle(frame_copy, match[1], ((match[1][0] + match[2]), (match[1][1] + match[3])), 255, 1)
+                cv.rectangle(frame, match[1], ((match[1][0] + match[2]), (match[1][1] + match[3])), 255, 1)
 
             # loc = np.where(res >= threshold)
             # for pt in zip(*loc[::-1]):
-            #     cv.rectangle(frame_copy, pt, (pt[0] + w, pt[1] + h), 255, 2)
+            #     cv.rectangle(frame, pt, (pt[0] + w, pt[1] + h), 255, 2)
 
             # top_left = max_loc
             # bottom_right = (top_left[0] + w, top_left[1] + h)
             #
-            # cv.rectangle(frame_copy, top_left, bottom_right, 255, 2)
+            # cv.rectangle(frame, top_left, bottom_right, 255, 2)
             # cv.imshow("results_test", res)
-            cv.imshow("results", frame_copy)
+            cv.imshow("results", frame)
             cv.waitKey(2000)
