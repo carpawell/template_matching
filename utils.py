@@ -4,7 +4,7 @@ import numpy as np
 
 show_crosshair = False
 from_center = False
-template_name = "./template/yaleB11_P00A+005E+10.pgm"  # name of template in /template
+template_name = "./template/4_7.png"  # name of template in /template
 template_cropped_name = "./template/template_cropped.jpg"  # name of template after cropping in /template
 threshold = 0.6
 
@@ -21,6 +21,9 @@ def get_template():  # select ROI template
 
     frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
+    cv.namedWindow("Your template", cv.WINDOW_NORMAL)
+    cv.resizeWindow('Your template', 600, 493)
+    cv.moveWindow("Your template", 660, 294)
     r = cv.selectROI("Your template", frame, show_crosshair, from_center)
     cv.destroyAllWindows()
     im_crop = frame[int(r[1]):int(r[1] + r[3]), int(r[0]):int(r[0] + r[2])]
@@ -33,6 +36,9 @@ def get_template():  # select ROI template
 def search():
     template = get_template()
     w, h = template.shape[::-1]
+    cv.namedWindow("Results", cv.WINDOW_NORMAL)
+    cv.resizeWindow('Results', 900, 493)
+    cv.moveWindow("Results", 660, 294)
     for root, dirs, files in os.walk("./data"):  # find templates in all files in /data directory
         for file_name in files:
             image = cv.VideoCapture("./data/" + file_name, 0)
