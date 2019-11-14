@@ -6,7 +6,7 @@ show_crosshair = False
 from_center = False
 template_name = "./template/yaleB11_P00A+005E+10.pgm"  # name of template in /template
 template_cropped_name = "./template/template_cropped.jpg"  # name of template after cropping in /template
-threshold = 0.7
+threshold = 0.6
 
 # methods = ['cv.TM_CCOEFF', 'cv.TM_CCOEFF_NORMED', 'cv.TM_CCORR',
 #            'cv.TM_CCORR_NORMED', 'cv.TM_SQDIFF', 'cv.TM_SQDIFF_NORMED']
@@ -65,7 +65,6 @@ def search():
                 if max_val > threshold:
                     matching.append((max_val, max_loc, width, height))
 
-
             # print("Max score is ", max_val)
 
             for match in matching:
@@ -80,5 +79,8 @@ def search():
             #
             # cv.rectangle(frame, top_left, bottom_right, 255, 2)
             # cv.imshow("results_test", res)
-            cv.imshow("results", frame)
-            cv.waitKey(2000)
+            cv.imshow("Results", frame)
+
+            k = cv.waitKey(2000)
+            if k == 27:  # Esc key to stop
+                exit()
