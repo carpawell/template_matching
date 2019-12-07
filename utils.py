@@ -1,12 +1,13 @@
 import cv2 as cv
 import os
+import time
 import numpy as np
 
 show_crosshair = False
 from_center = False
 template_name = "./template/4_7.png"  # name of template in /template
 template_cropped_name = "./template/template_cropped.jpg"  # name of template after cropping in /template
-threshold = 0.6
+threshold = 0.7
 
 # methods = ['cv.TM_CCOEFF', 'cv.TM_CCOEFF_NORMED', 'cv.TM_CCORR',
 #            'cv.TM_CCORR_NORMED', 'cv.TM_SQDIFF', 'cv.TM_SQDIFF_NORMED']
@@ -90,3 +91,28 @@ def search():
             k = cv.waitKey(2000)
             if k == 27:  # Esc key to stop
                 exit()
+
+
+def viola():
+    face_cascade = cv.CascadeClassifier('./haarcascade_frontalface_default.xml')
+    eye_cascade = cv.CascadeClassifier('./haarcascade_eye.xml')
+
+    files = next(os.walk("./data"))[2]
+    for photo in files:
+        img = cv.imread(f"./data/{photo}")
+        gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+        for (x, y, w, h) in faces:
+            img = cv.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+            roi_gray = gray[y:y+h, x:x+w]
+            roi_color = img[y:y+h, x:x+w]
+            eyes = eye_cascade.detectMultiScale(roi_gray)
+            for (ex, ey, ew, eh) in eyes:
+                cv.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (0, 255, 0), 2)
+
+        img = cv.resize(img, (664, 784))
+
+        cv.imshow('Viola-Jones detector', img)
+        cv.waitKey(5000)
+    cv.destroyAllWindows()
